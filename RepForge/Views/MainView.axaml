@@ -26,5 +26,8 @@
     <TabItem Header="History">
       <views:HistoryView DataContext="{Binding History}" />
     </TabItem>
+    <TabItem Header="Sync">
+      <views:SyncView DataContext="{Binding Sync}" />
+    </TabItem>
   </TabControl>
 </UserControl>

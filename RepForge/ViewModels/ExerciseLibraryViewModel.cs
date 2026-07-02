@@ -25,10 +25,10 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
     public ExerciseLibraryViewModel()
     {
         if (!Design.IsDesignMode)
-            _ = LoadAsync();
+            _ = RefreshAsync();
     }
 
-    private async Task LoadAsync()
+    public async Task RefreshAsync()
     {
         IsLoading = true;
         try

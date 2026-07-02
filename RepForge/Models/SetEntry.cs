@@ -6,13 +6,13 @@ namespace RepForge.Models;
 [Table("SetEntry")]
 public class SetEntry
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Indexed]
-    public int SessionId { get; set; }
+    public Guid SessionId { get; set; }
 
-    public int ExerciseId { get; set; }
+    public Guid ExerciseId { get; set; }
 
     /// <summary>1-based set number within the exercise for this session.</summary>
     public int SetNumber { get; set; }
@@ -24,4 +24,6 @@ public class SetEntry
     public bool IsWarmup { get; set; }
 
     public DateTime LoggedUtc { get; set; } = DateTime.UtcNow;
+
+    public DateTime ModifiedUtc { get; set; }
 }

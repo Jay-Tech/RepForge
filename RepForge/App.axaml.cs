@@ -20,13 +20,14 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
+            // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel()
             };
+            StartSyncServer();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -37,6 +38,22 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static void StartSyncServer()
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var db = await Data.RepForgeDb.GetAsync();
+                new Sync.SyncServer(db).Start();
+            }
+            catch (Exception ex)
+            {
+                Sync.SyncEvents.RaiseActivity($"Sync server failed to start: {ex.Message}");
+            }
+        });
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

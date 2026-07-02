@@ -25,10 +25,10 @@ public partial class TemplatesViewModel : ViewModelBase
     public TemplatesViewModel()
     {
         if (!Design.IsDesignMode)
-            _ = LoadAsync();
+            _ = RefreshAsync();
     }
 
-    private async Task LoadAsync()
+    public async Task RefreshAsync()
     {
         _db = await RepForgeDb.GetAsync();
         Templates.Clear();
@@ -77,7 +77,7 @@ public partial class TemplatesViewModel : ViewModelBase
         ActiveEditor = new TemplateEditorViewModel(_db, template, () =>
         {
             ActiveEditor = null;
-            _ = LoadAsync();
+            _ = RefreshAsync();
         });
     }
 }

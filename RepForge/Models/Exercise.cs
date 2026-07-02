@@ -5,8 +5,8 @@ namespace RepForge.Models;
 [Table("Exercise")]
 public class Exercise
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [NotNull]
     public string Name { get; set; } = string.Empty;
@@ -16,4 +16,6 @@ public class Exercise
     public string? Equipment { get; set; }
 
     public string? Notes { get; set; }
+
+    public DateTime ModifiedUtc { get; set; }
 }

@@ -6,15 +6,17 @@ namespace RepForge.Models;
 [Table("WorkoutSession")]
 public class WorkoutSession
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>Template this session was started from; null for ad-hoc workouts.</summary>
-    public int? TemplateId { get; set; }
+    public Guid? TemplateId { get; set; }
 
     public DateTime StartedUtc { get; set; } = DateTime.UtcNow;
 
     public DateTime? CompletedUtc { get; set; }
 
     public string? Notes { get; set; }
+
+    public DateTime ModifiedUtc { get; set; }
 }

@@ -6,13 +6,13 @@ namespace RepForge.Models;
 [Table("TemplateExercise")]
 public class TemplateExercise
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Indexed]
-    public int TemplateId { get; set; }
+    public Guid TemplateId { get; set; }
 
-    public int ExerciseId { get; set; }
+    public Guid ExerciseId { get; set; }
 
     /// <summary>Position of this exercise within the template.</summary>
     public int SortOrder { get; set; }
@@ -24,4 +24,6 @@ public class TemplateExercise
     public double? TargetWeight { get; set; }
 
     public int RestSeconds { get; set; } = 90;
+
+    public DateTime ModifiedUtc { get; set; }
 }

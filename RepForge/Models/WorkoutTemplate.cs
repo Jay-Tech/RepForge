@@ -6,8 +6,8 @@ namespace RepForge.Models;
 [Table("WorkoutTemplate")]
 public class WorkoutTemplate
 {
-    [PrimaryKey, AutoIncrement]
-    public int Id { get; set; }
+    [PrimaryKey]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [NotNull]
     public string Name { get; set; } = string.Empty;
@@ -15,4 +15,6 @@ public class WorkoutTemplate
     public string? Description { get; set; }
 
     public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+
+    public DateTime ModifiedUtc { get; set; }
 }

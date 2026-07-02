@@ -10,9 +10,9 @@ namespace RepForge.ViewModels;
 public partial class SessionExerciseViewModel : ObservableObject
 {
     private readonly RepForgeDb _db;
-    private readonly int _sessionId;
+    private readonly Guid _sessionId;
 
-    public int ExerciseId { get; }
+    public Guid ExerciseId { get; }
 
     public string ExerciseName { get; }
 
@@ -37,7 +37,7 @@ public partial class SessionExerciseViewModel : ObservableObject
     private string _lastTime = string.Empty;
 
     public SessionExerciseViewModel(
-        RepForgeDb db, int sessionId, int exerciseId, string exerciseName,
+        RepForgeDb db, Guid sessionId, Guid exerciseId, string exerciseName,
         int targetSets, int targetReps, double? targetWeight)
     {
         _db = db;

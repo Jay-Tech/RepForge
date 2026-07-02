@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.SyncView"
+             x:DataType="vm:SyncViewModel">
+  <Design.DataContext>
+    <vm:SyncViewModel />
+  </Design.DataContext>
+
+  <StackPanel Margin="16" Spacing="12" MaxWidth="480" HorizontalAlignment="Left">
+    <TextBlock Text="Sync" FontSize="18" FontWeight="SemiBold" />
+
+    <!-- Desktop: we are the server -->
+    <StackPanel Spacing="8" IsVisible="{Binding IsDesktop}">
+      <TextBlock Text="{Binding ListeningInfo}" FontWeight="SemiBold" TextWrapping="Wrap" />
+      <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                 Text="Leave this app running, make sure the phone is on the same Wi-Fi, then enter the address above on the phone's Sync tab and tap Sync now." />
+    </StackPanel>
+
+    <!-- Phone: we connect to the desktop -->
+    <StackPanel Spacing="8" IsVisible="{Binding IsPhone}">
+      <TextBlock Text="Desktop address" FontSize="12" Opacity="0.6" />
+      <TextBox Text="{Binding DesktopAddress}" Watermark="e.g. 192.168.1.5" />
+      <Button Content="Sync now" Classes="accent" Height="40"
+              HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+              Command="{Binding SyncNowCommand}" />
+      <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                 Text="The desktop app must be running and on the same Wi-Fi. Its address is shown on its own Sync tab." />
+    </StackPanel>
+
+    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" FontWeight="SemiBold"
+               IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+  </StackPanel>
+</UserControl>
