@@ -23,5 +23,8 @@
         <PackageVersion Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
 
         <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
+
+        <!-- tools/IconGen only; same version Avalonia uses -->
+        <PackageVersion Include="SkiaSharp" Version="2.88.9" />
     </ItemGroup>
 </Project>

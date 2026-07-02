@@ -6,7 +6,7 @@
         xmlns:views="using:RepForge.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RepForge.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/repforge.ico"
         Title="RepForge">
         <views:MainView />
 </Window>

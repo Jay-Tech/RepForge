@@ -9,6 +9,7 @@
 
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\RepForge\Assets\repforge.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

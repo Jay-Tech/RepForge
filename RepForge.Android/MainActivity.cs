@@ -6,9 +6,9 @@ using Avalonia.Android;
 namespace RepForge.Android;
 
 [Activity(
-    Label = "RepForge.Android",
+    Label = "RepForge",
     Theme = "@style/MyTheme.NoActionBar",
-    Icon = "@drawable/icon",
+    Icon = "@mipmap/ic_launcher",
     MainLauncher = true,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
 public class MainActivity : AvaloniaMainActivity<App>
