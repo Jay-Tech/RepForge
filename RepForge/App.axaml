@@ -2,8 +2,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:RepForge"
              x:Class="RepForge.App"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Dark">
+    <!-- RepForge is dark-first: matches the icon and reads well in a gym. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Ember accent, matching the app icon -->
+            <Color x:Key="SystemAccentColor">#FF6A1A</Color>
+            <Color x:Key="SystemAccentColorDark1">#E85C10</Color>
+            <Color x:Key="SystemAccentColorDark2">#CC4E0B</Color>
+            <Color x:Key="SystemAccentColorDark3">#A93F06</Color>
+            <Color x:Key="SystemAccentColorLight1">#FF8140</Color>
+            <Color x:Key="SystemAccentColorLight2">#FF9A63</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFB388</Color>
+
+            <!-- Brand surfaces -->
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#14161B" />
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E212A" />
+            <SolidColorBrush x:Key="CardStrokeBrush" Color="#2A2E39" />
+        </ResourceDictionary>
+    </Application.Resources>
 
     <Application.DataTemplates>
         <local:ViewLocator/>
@@ -11,5 +29,6 @@
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://RepForge/Styles/AppStyles.axaml" />
     </Application.Styles>
 </Application>
