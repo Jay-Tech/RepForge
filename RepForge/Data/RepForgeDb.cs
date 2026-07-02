@@ -107,6 +107,22 @@ public sealed class RepForgeDb
     public Task<List<WorkoutSession>> GetSessionsAsync() =>
         _conn.Table<WorkoutSession>().OrderByDescending(s => s.StartedUtc).ToListAsync();
 
+    /// <summary>Most recent unfinished session, if any — used to resume after an app restart.</summary>
+    public Task<WorkoutSession?> GetActiveSessionAsync() =>
+        _conn.Table<WorkoutSession>()
+            .Where(s => s.CompletedUtc == null)
+            .OrderByDescending(s => s.StartedUtc)
+            .FirstOrDefaultAsync()!;
+
+    public Task<WorkoutTemplate?> GetTemplateAsync(int id) =>
+        _conn.FindAsync<WorkoutTemplate>(id)!;
+
+    public async Task DeleteSessionAsync(WorkoutSession session)
+    {
+        await _conn.Table<SetEntry>().Where(s => s.SessionId == session.Id).DeleteAsync();
+        await _conn.DeleteAsync(session);
+    }
+
     public Task<int> SaveSessionAsync(WorkoutSession session) =>
         session.Id == 0 ? _conn.InsertAsync(session) : _conn.UpdateAsync(session);
 

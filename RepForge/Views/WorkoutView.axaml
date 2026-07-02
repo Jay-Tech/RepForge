@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             xmlns:m="using:RepForge.Models"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.WorkoutView"
+             x:DataType="vm:WorkoutViewModel">
+  <Design.DataContext>
+    <vm:WorkoutViewModel />
+  </Design.DataContext>
+
+  <Panel>
+    <!-- Plan picker (shown when no session is running) -->
+    <DockPanel Margin="12"
+               IsVisible="{Binding ActiveSession, Converter={x:Static ObjectConverters.IsNull}}">
+      <TextBlock DockPanel.Dock="Top" Margin="0,0,0,8" Opacity="0.6" FontSize="12"
+                 Text="Pick a plan, then start your workout" />
+      <Button DockPanel.Dock="Bottom" Margin="0,12,0,0" Height="44"
+              HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+              Classes="accent" Content="Start workout"
+              Command="{Binding StartCommand}" />
+      <ListBox ItemsSource="{Binding Templates}"
+               SelectedItem="{Binding SelectedTemplate}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="m:WorkoutTemplate">
+            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Padding="0,6" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <!-- Active session -->
+    <ContentControl Content="{Binding ActiveSession}"
+                    IsVisible="{Binding ActiveSession, Converter={x:Static ObjectConverters.IsNotNull}}" />
+  </Panel>
+</UserControl>

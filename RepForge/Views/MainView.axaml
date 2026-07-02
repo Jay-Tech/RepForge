@@ -13,8 +13,11 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <TabControl>
-    <TabItem Header="Workouts">
+  <TabControl SelectionChanged="OnTabSelectionChanged">
+    <TabItem Header="Workout">
+      <views:WorkoutView DataContext="{Binding Workout}" />
+    </TabItem>
+    <TabItem Header="Plans">
       <views:TemplatesView DataContext="{Binding Templates}" />
     </TabItem>
     <TabItem Header="Exercises">
