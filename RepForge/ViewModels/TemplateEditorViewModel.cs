@@ -48,10 +48,8 @@ public partial class TemplateEditorViewModel : ViewModelBase
         var byId = exercises.ToDictionary(e => e.Id);
         Items.Clear();
         foreach (var row in await _db.GetTemplateExercisesAsync(_template.Id))
-        {
-            var name = byId.TryGetValue(row.ExerciseId, out var ex) ? ex.Name : "(deleted exercise)";
-            Items.Add(new TemplateExerciseItem(row, name, _db.SaveTemplateExerciseAsync));
-        }
+            Items.Add(new TemplateExerciseItem(
+                row, byId.GetValueOrDefault(row.ExerciseId), _db.SaveTemplateExerciseAsync));
     }
 
     [RelayCommand]
@@ -67,7 +65,7 @@ public partial class TemplateEditorViewModel : ViewModelBase
             SortOrder = Items.Count,
         };
         await _db.SaveTemplateExerciseAsync(row);
-        Items.Add(new TemplateExerciseItem(row, exercise.Name, _db.SaveTemplateExerciseAsync));
+        Items.Add(new TemplateExerciseItem(row, exercise, _db.SaveTemplateExerciseAsync));
         SelectedExercise = null;
     }
 

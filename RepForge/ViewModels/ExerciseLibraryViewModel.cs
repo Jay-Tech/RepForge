@@ -20,6 +20,9 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
     private string _newMuscleGroup = string.Empty;
 
     [ObservableProperty]
+    private bool _newIsCardio;
+
+    [ObservableProperty]
     private bool _isLoading;
 
     public ExerciseLibraryViewModel()
@@ -51,7 +54,13 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
         if (name.Length == 0 || _db is null)
             return;
 
-        var exercise = new Exercise { Name = name, MuscleGroup = NewMuscleGroup.Trim() };
+        var exercise = new Exercise
+        {
+            Name = name,
+            MuscleGroup = NewIsCardio && NewMuscleGroup.Trim().Length == 0
+                ? "Cardio" : NewMuscleGroup.Trim(),
+            Type = NewIsCardio ? ExerciseType.Cardio : ExerciseType.Strength,
+        };
         await _db.SaveExerciseAsync(exercise);
 
         var index = 0;
@@ -62,6 +71,7 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
 
         NewName = string.Empty;
         NewMuscleGroup = string.Empty;
+        NewIsCardio = false;
     }
 
     [RelayCommand]

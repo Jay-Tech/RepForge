@@ -55,7 +55,7 @@
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <Grid ColumnDefinitions="*,*,Auto">
+                <Grid ColumnDefinitions="*,*,Auto" IsVisible="{Binding IsStrength}">
                   <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,8,0">
                     <TextBlock Text="Reps" FontSize="11" Opacity="0.6" />
                     <NumericUpDown Value="{Binding Reps}" Minimum="0" Maximum="100"
@@ -69,6 +69,36 @@
                   <Button Grid.Column="2" Content="Log set" VerticalAlignment="Bottom"
                           Command="{Binding LogSetCommand}" />
                 </Grid>
+                <StackPanel Spacing="8" IsVisible="{Binding IsCardio}">
+                  <Grid ColumnDefinitions="*,*">
+                    <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,8,0">
+                      <TextBlock Text="Distance" FontSize="11" Opacity="0.6" />
+                      <NumericUpDown Value="{Binding Distance}" Minimum="0" Maximum="1000"
+                                     Increment="0.5" Watermark="—" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                      <TextBlock Text="Time (min)" FontSize="11" Opacity="0.6" />
+                      <NumericUpDown Value="{Binding Minutes}" Minimum="0" Maximum="600"
+                                     Increment="1" Watermark="—" />
+                    </StackPanel>
+                  </Grid>
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6"
+                                VerticalAlignment="Center">
+                      <TextBlock Text="Laps" FontSize="11" Opacity="0.6"
+                                 VerticalAlignment="Center" />
+                      <Button Content="−" Padding="12,4"
+                              Command="{Binding RemoveLapCommand}" />
+                      <TextBlock Text="{Binding Laps}" FontWeight="SemiBold" FontSize="16"
+                                 MinWidth="24" TextAlignment="Center"
+                                 VerticalAlignment="Center" />
+                      <Button Content="+" Padding="12,4"
+                              Command="{Binding AddLapCommand}" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Log" VerticalAlignment="Center"
+                            Command="{Binding LogSetCommand}" />
+                  </Grid>
+                </StackPanel>
               </StackPanel>
             </Border>
           </DataTemplate>

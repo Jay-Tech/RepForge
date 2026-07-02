@@ -4,8 +4,9 @@ using RepForge.Models;
 namespace RepForge.ViewModels;
 
 /// <summary>
-/// One row in the template editor: a TemplateExercise joined with its exercise name.
+/// One row in the template editor: a TemplateExercise joined with its exercise.
 /// Edits to the targets write through to the row and are persisted immediately.
+/// Strength rows edit sets/reps/weight/rest; cardio rows edit distance/time.
 /// </summary>
 public partial class TemplateExerciseItem : ObservableObject
 {
@@ -14,6 +15,10 @@ public partial class TemplateExerciseItem : ObservableObject
     public TemplateExercise Row { get; }
 
     public string ExerciseName { get; }
+
+    public bool IsCardio { get; }
+
+    public bool IsStrength => !IsCardio;
 
     [ObservableProperty]
     private decimal? _sets;
@@ -27,10 +32,17 @@ public partial class TemplateExerciseItem : ObservableObject
     [ObservableProperty]
     private decimal? _restSeconds;
 
-    public TemplateExerciseItem(TemplateExercise row, string exerciseName, Func<TemplateExercise, Task> save)
+    [ObservableProperty]
+    private decimal? _distance;
+
+    [ObservableProperty]
+    private decimal? _minutes;
+
+    public TemplateExerciseItem(TemplateExercise row, Exercise? exercise, Func<TemplateExercise, Task> save)
     {
         Row = row;
-        ExerciseName = exerciseName;
+        ExerciseName = exercise?.Name ?? "(deleted exercise)";
+        IsCardio = exercise?.Type == ExerciseType.Cardio;
         _save = save;
 
         // Backing fields, not properties: initialization must not trigger a save.
@@ -38,6 +50,8 @@ public partial class TemplateExerciseItem : ObservableObject
         _reps = row.TargetReps;
         _weight = row.TargetWeight is null ? null : (decimal)row.TargetWeight;
         _restSeconds = row.RestSeconds;
+        _distance = row.TargetDistance is null ? null : (decimal)row.TargetDistance;
+        _minutes = row.TargetMinutes is null ? null : (decimal)row.TargetMinutes;
     }
 
     partial void OnSetsChanged(decimal? value)
@@ -64,6 +78,18 @@ public partial class TemplateExerciseItem : ObservableObject
     {
         if (value is null) return;
         Row.RestSeconds = (int)value;
+        _ = _save(Row);
+    }
+
+    partial void OnDistanceChanged(decimal? value)
+    {
+        Row.TargetDistance = value is null ? null : (double)value;
+        _ = _save(Row);
+    }
+
+    partial void OnMinutesChanged(decimal? value)
+    {
+        Row.TargetMinutes = value is null ? null : (double)value;
         _ = _save(Row);
     }
 }

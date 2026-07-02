@@ -45,9 +45,7 @@ public partial class SessionDetailViewModel : ViewModelBase
                 ? ex.Name : "(deleted exercise)";
             var lines = group
                 .OrderBy(s => s.SetNumber)
-                .Select(s => s.Weight > 0
-                    ? $"Set {s.SetNumber}:   {s.Reps} reps  ×  {s.Weight:0.##}"
-                    : $"Set {s.SetNumber}:   {s.Reps} reps")
+                .Select(s => $"Set {s.SetNumber}:   {Models.SetFormat.Line(s)}")
                 .ToList();
             vm.Groups.Add(new HistoryExerciseGroup(name, lines));
         }

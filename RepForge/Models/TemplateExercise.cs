@@ -25,5 +25,10 @@ public class TemplateExercise
 
     public int RestSeconds { get; set; } = 90;
 
+    // Cardio targets (used when the exercise's Type is Cardio)
+    public double? TargetDistance { get; set; }
+
+    public double? TargetMinutes { get; set; }
+
     public DateTime ModifiedUtc { get; set; }
 }

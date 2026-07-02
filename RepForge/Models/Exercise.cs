@@ -17,5 +17,7 @@ public class Exercise
 
     public string? Notes { get; set; }
 
+    public ExerciseType Type { get; set; }
+
     public DateTime ModifiedUtc { get; set; }
 }

@@ -23,6 +23,13 @@ public class SetEntry
 
     public bool IsWarmup { get; set; }
 
+    // Cardio fields (reps/weight stay 0 for cardio entries)
+    public double Distance { get; set; }
+
+    public int DurationSec { get; set; }
+
+    public int Laps { get; set; }
+
     public DateTime LoggedUtc { get; set; } = DateTime.UtcNow;
 
     public DateTime ModifiedUtc { get; set; }

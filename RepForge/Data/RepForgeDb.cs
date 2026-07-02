@@ -73,14 +73,29 @@ public sealed class RepForgeDb
         await _conn.CreateTableAsync<Tombstone>();
         await _conn.CreateTableAsync<Setting>();
 
-        if (await _conn.Table<Exercise>().CountAsync() == 0)
-        {
-            var now = DateTime.UtcNow;
-            var seeds = SeedExercises();
-            foreach (var seed in seeds)
-                seed.ModifiedUtc = now;
-            await _conn.InsertAllAsync(seeds);
-        }
+        await EnsureSeedExercisesAsync();
+    }
+
+    /// <summary>
+    /// Inserts any seed exercises not yet present (new installs get all of them;
+    /// existing databases pick up seeds added in later versions). Seeds the user
+    /// deliberately deleted stay deleted — their tombstones block re-insertion.
+    /// </summary>
+    private async Task EnsureSeedExercisesAsync()
+    {
+        var existing = (await _conn.Table<Exercise>().ToListAsync()).Select(e => e.Id).ToHashSet();
+        var deleted = (await _conn.Table<Tombstone>().ToListAsync()).Select(t => t.Id).ToHashSet();
+
+        var missing = SeedExercises()
+            .Where(s => !existing.Contains(s.Id) && !deleted.Contains(s.Id))
+            .ToList();
+        if (missing.Count == 0)
+            return;
+
+        var now = DateTime.UtcNow;
+        foreach (var seed in missing)
+            seed.ModifiedUtc = now;
+        await _conn.InsertAllAsync(missing);
     }
 
     /// <summary>
@@ -398,6 +413,19 @@ public sealed class RepForgeDb
 
     private static List<Exercise> SeedExercises()
     {
+        List<(string Name, string Group, string Equipment)> cardio =
+        [
+            ("Treadmill Run", "Cardio", "Machine"),
+            ("Outdoor Run", "Cardio", "Bodyweight"),
+            ("Incline Walk", "Cardio", "Machine"),
+            ("Cycling", "Cardio", "Machine"),
+            ("Rowing Machine", "Cardio", "Machine"),
+            ("Elliptical", "Cardio", "Machine"),
+            ("Stair Climber", "Cardio", "Machine"),
+            ("Swimming", "Cardio", "Bodyweight"),
+            ("Jump Rope", "Cardio", "Bodyweight"),
+        ];
+
         List<(string Name, string Group, string Equipment)> seeds =
         [
             ("Bench Press", "Chest", "Barbell"),
@@ -433,6 +461,13 @@ public sealed class RepForgeDb
             Name = s.Name,
             MuscleGroup = s.Group,
             Equipment = s.Equipment,
-        }).ToList();
+        }).Concat(cardio.Select(s => new Exercise
+        {
+            Id = DeterministicExerciseId(s.Name),
+            Name = s.Name,
+            MuscleGroup = s.Group,
+            Equipment = s.Equipment,
+            Type = ExerciseType.Cardio,
+        })).ToList();
     }
 }

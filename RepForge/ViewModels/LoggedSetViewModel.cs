@@ -8,9 +8,7 @@ public class LoggedSetViewModel(SetEntry row) : ObservableObject
 {
     public SetEntry Row { get; } = row;
 
-    public string Display => Row.Weight > 0
-        ? $"Set {Row.SetNumber}:   {Row.Reps} reps  ×  {Row.Weight:0.##}"
-        : $"Set {Row.SetNumber}:   {Row.Reps} reps";
+    public string Display => $"Set {Row.SetNumber}:   {SetFormat.Line(Row)}";
 
     public void Refresh() => OnPropertyChanged(nameof(Display));
 }

@@ -33,19 +33,18 @@ public partial class ActiveSessionViewModel : ViewModelBase
         var title = "Workout";
         var items = new List<SessionExerciseViewModel>();
 
+        Exercise ExerciseOrPlaceholder(Guid id) =>
+            exercisesById.TryGetValue(id, out var ex)
+                ? ex : new Exercise { Id = id, Name = "(deleted exercise)" };
+
         if (session.TemplateId is { } templateId)
         {
             if (await db.GetTemplateAsync(templateId) is { } template)
                 title = template.Name;
 
             foreach (var row in await db.GetTemplateExercisesAsync(templateId))
-            {
-                var name = exercisesById.TryGetValue(row.ExerciseId, out var ex)
-                    ? ex.Name : "(deleted exercise)";
                 items.Add(new SessionExerciseViewModel(
-                    db, session.Id, row.ExerciseId, name,
-                    row.TargetSets, row.TargetReps, row.TargetWeight));
-            }
+                    db, session.Id, ExerciseOrPlaceholder(row.ExerciseId), row));
         }
 
         // Re-attach sets already logged (when resuming an interrupted session).
@@ -54,9 +53,8 @@ public partial class ActiveSessionViewModel : ViewModelBase
             var item = items.FirstOrDefault(x => x.ExerciseId == set.ExerciseId);
             if (item is null)
             {
-                var name = exercisesById.TryGetValue(set.ExerciseId, out var ex)
-                    ? ex.Name : "(deleted exercise)";
-                item = new SessionExerciseViewModel(db, session.Id, set.ExerciseId, name, 0, 0, null);
+                item = new SessionExerciseViewModel(
+                    db, session.Id, ExerciseOrPlaceholder(set.ExerciseId), null);
                 items.Add(item);
             }
             item.AddExisting(set);
@@ -66,10 +64,7 @@ public partial class ActiveSessionViewModel : ViewModelBase
         {
             var previous = await db.GetPreviousSetsAsync(item.ExerciseId, session.Id);
             if (previous.Count > 0)
-            {
-                item.LastTime = "Last time:  " + string.Join(", ", previous.Select(s =>
-                    s.Weight > 0 ? $"{s.Weight:0.##}×{s.Reps}" : $"{s.Reps} reps"));
-            }
+                item.LastTime = "Last time:  " + string.Join(", ", previous.Select(SetFormat.Short));
         }
 
         var vm = new ActiveSessionViewModel(db, session, title, close);
