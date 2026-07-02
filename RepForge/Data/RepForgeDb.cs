@@ -226,6 +226,12 @@ public sealed class RepForgeDb
         await AddTombstoneAsync(set.Id, "SetEntry");
     }
 
+    public Task<List<SetEntry>> GetSetsForExerciseAsync(Guid exerciseId) =>
+        _conn.Table<SetEntry>()
+            .Where(s => s.ExerciseId == exerciseId)
+            .OrderBy(s => s.LoggedUtc)
+            .ToListAsync();
+
     /// <summary>Sets for this exercise from the most recent other session — the "last time" hint.</summary>
     public async Task<List<SetEntry>> GetPreviousSetsAsync(Guid exerciseId, Guid excludeSessionId)
     {

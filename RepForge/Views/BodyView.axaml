@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:RepForge.ViewModels"
+             xmlns:controls="using:RepForge.Controls"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
              x:Class="RepForge.Views.BodyView"
              x:DataType="vm:BodyViewModel">
@@ -40,6 +41,20 @@
           </Grid>
           <TextBlock Text="{Binding CurrentSummary}" FontWeight="SemiBold"
                      IsVisible="{Binding CurrentSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="card">
+        <StackPanel Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="Trend" Classes="dim" FontSize="12"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" SelectedIndex="{Binding ChartModeIndex}" MinWidth="96">
+              <ComboBoxItem>Weight</ComboBoxItem>
+              <ComboBoxItem>BMI</ComboBoxItem>
+            </ComboBox>
+          </Grid>
+          <controls:TrendChart Height="170" Points="{Binding ChartPoints}" />
         </StackPanel>
       </Border>
     </StackPanel>

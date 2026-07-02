@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RepForge.Controls;
 using RepForge.Data;
 using RepForge.Models;
 
@@ -43,6 +44,15 @@ public partial class BodyViewModel : ViewModelBase
     [ObservableProperty]
     private string _currentSummary = string.Empty;
 
+    /// <summary>0 = weight trend, 1 = BMI trend.</summary>
+    [ObservableProperty]
+    private int _chartModeIndex;
+
+    [ObservableProperty]
+    private IReadOnlyList<ChartPoint> _chartPoints = [];
+
+    private List<BodyMetric> _rows = [];
+
     public bool IsMetric => UnitsIndex == 1;
 
     public BodyViewModel()
@@ -73,9 +83,11 @@ public partial class BodyViewModel : ViewModelBase
             return;
 
         var rows = await _db.GetBodyMetricsAsync();
+        _rows = rows;
         Entries.Clear();
         foreach (var row in rows)
             Entries.Add(new BodyMetricItem(row, IsMetric));
+        RebuildChart();
 
         var latest = rows.FirstOrDefault();
         if (latest is not null)
@@ -117,6 +129,20 @@ public partial class BodyViewModel : ViewModelBase
             return;
         await _db.DeleteBodyMetricAsync(item.Row);
         await RefreshAsync();
+    }
+
+    partial void OnChartModeIndexChanged(int value) => RebuildChart();
+
+    private void RebuildChart()
+    {
+        ChartPoints = ChartModeIndex == 0
+            ? _rows.Where(r => r.Weight > 0)
+                .Select(r => new ChartPoint(r.MeasuredUtc, r.Weight))
+                .ToList()
+            : _rows.Select(r => (r.MeasuredUtc, Bmi: Bmi(r, IsMetric)))
+                .Where(x => x.Bmi is not null)
+                .Select(x => new ChartPoint(x.MeasuredUtc, x.Bmi!.Value))
+                .ToList();
     }
 
     /// <summary>BMI from a weigh-in, or null when height wasn't recorded.</summary>
