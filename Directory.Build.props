@@ -1,0 +1,7 @@
+<Project>
+    <ItemGroup>
+        <!-- SQLite advisory with no fixed SQLitePCLRaw release yet (latest 2.1.11 is still flagged).
+             Local single-user database, no untrusted SQL input. Remove once a fixed bundle_green ships. -->
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+    </ItemGroup>
+</Project>

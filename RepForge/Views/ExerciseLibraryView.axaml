@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             xmlns:m="using:RepForge.Models"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.ExerciseLibraryView"
+             x:DataType="vm:ExerciseLibraryViewModel">
+  <Design.DataContext>
+    <vm:ExerciseLibraryViewModel />
+  </Design.DataContext>
+
+  <DockPanel Margin="12">
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,*,Auto" Margin="0,0,0,12">
+      <TextBox Grid.Column="0" Margin="0,0,8,0"
+               Text="{Binding NewName}"
+               Watermark="Exercise name">
+        <TextBox.KeyBindings>
+          <KeyBinding Gesture="Enter" Command="{Binding AddExerciseCommand}" />
+        </TextBox.KeyBindings>
+      </TextBox>
+      <TextBox Grid.Column="1" Margin="0,0,8,0"
+               Text="{Binding NewMuscleGroup}"
+               Watermark="Muscle group">
+        <TextBox.KeyBindings>
+          <KeyBinding Gesture="Enter" Command="{Binding AddExerciseCommand}" />
+        </TextBox.KeyBindings>
+      </TextBox>
+      <Button Grid.Column="2" Content="Add" Command="{Binding AddExerciseCommand}" />
+    </Grid>
+
+    <ProgressBar DockPanel.Dock="Top" IsIndeterminate="True"
+                 IsVisible="{Binding IsLoading}" Margin="0,0,0,8" />
+
+    <ListBox ItemsSource="{Binding Exercises}">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="m:Exercise">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="2">
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{Binding MuscleGroup}" FontSize="12" Opacity="0.6" />
+                <TextBlock Text="{Binding Equipment}" FontSize="12" Opacity="0.6" />
+              </StackPanel>
+            </StackPanel>
+            <Button Grid.Column="1" Content="✕" VerticalAlignment="Center"
+                    Background="Transparent"
+                    Command="{Binding $parent[ListBox].((vm:ExerciseLibraryViewModel)DataContext).DeleteExerciseCommand}"
+                    CommandParameter="{Binding}" />
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</UserControl>

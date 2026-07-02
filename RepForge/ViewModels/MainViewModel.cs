@@ -1,9 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace RepForge.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private string _greeting = "Welcome to Avalonia!";
+    public ExerciseLibraryViewModel ExerciseLibrary { get; } = new();
 }
