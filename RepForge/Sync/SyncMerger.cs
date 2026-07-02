@@ -25,6 +25,7 @@ public static class SyncMerger
             TemplateExercises = MergeRows(a.TemplateExercises, b.TemplateExercises, te => te.Id, te => te.ModifiedUtc, deadIds),
             Sessions = MergeRows(a.Sessions, b.Sessions, s => s.Id, s => s.ModifiedUtc, deadIds),
             Sets = MergeRows(a.Sets, b.Sets, s => s.Id, s => s.ModifiedUtc, deadIds),
+            BodyMetrics = MergeRows(a.BodyMetrics, b.BodyMetrics, m => m.Id, m => m.ModifiedUtc, deadIds),
         };
 
         // Referential cleanup: children whose parent was deleted on the other device.

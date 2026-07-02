@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.BodyView"
+             x:DataType="vm:BodyViewModel">
+  <Design.DataContext>
+    <vm:BodyViewModel />
+  </Design.DataContext>
+
+  <DockPanel Margin="12">
+    <StackPanel DockPanel.Dock="Top" Spacing="10">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Classes="h1" Text="Body tracking"
+                   VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" SelectedIndex="{Binding UnitsIndex}" MinWidth="100">
+          <ComboBoxItem>lb / in</ComboBoxItem>
+          <ComboBoxItem>kg / cm</ComboBoxItem>
+        </ComboBox>
+      </Grid>
+
+      <Border Classes="card">
+        <StackPanel Spacing="10">
+          <Grid ColumnDefinitions="*,*,Auto">
+            <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,8,0">
+              <TextBlock Text="Weight" FontSize="11" Classes="dim" />
+              <NumericUpDown Value="{Binding Weight}" Minimum="0" Maximum="1500"
+                             Increment="0.5" Watermark="—" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="2" Margin="0,0,8,0">
+              <TextBlock Text="Height" FontSize="11" Classes="dim" />
+              <NumericUpDown Value="{Binding Height}" Minimum="0" Maximum="300"
+                             Increment="0.5" Watermark="—" />
+            </StackPanel>
+            <Button Grid.Column="2" Content="Log" Classes="accent"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding LogCommand}" />
+          </Grid>
+          <TextBlock Text="{Binding CurrentSummary}" FontWeight="SemiBold"
+                     IsVisible="{Binding CurrentSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <ListBox ItemsSource="{Binding Entries}" Margin="0,10,0,0">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:BodyMetricItem">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="2">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="{Binding WeightText}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding BmiText}" Classes="dim" FontSize="12"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding BmiText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+              </StackPanel>
+              <TextBlock Text="{Binding DateText}" Classes="dim" FontSize="12" />
+            </StackPanel>
+            <Button Grid.Column="1" Content="✕" Background="Transparent"
+                    VerticalAlignment="Center"
+                    Command="{Binding $parent[ListBox].((vm:BodyViewModel)DataContext).DeleteCommand}"
+                    CommandParameter="{Binding}" />
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</UserControl>

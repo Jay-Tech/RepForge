@@ -17,6 +17,8 @@ public class SyncData
 
     public List<SetEntry> Sets { get; set; } = [];
 
+    public List<BodyMetric> BodyMetrics { get; set; } = [];
+
     public List<Tombstone> Tombstones { get; set; } = [];
 
     public string Summary() =>

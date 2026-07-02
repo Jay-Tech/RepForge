@@ -10,7 +10,10 @@ namespace RepForge.Android;
     Theme = "@style/MyTheme.NoActionBar",
     Icon = "@mipmap/ic_launcher",
     MainLauncher = true,
-    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
+    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize |
+                           ConfigChanges.SmallestScreenSize | ConfigChanges.ScreenLayout |
+                           ConfigChanges.Density | ConfigChanges.Keyboard |
+                           ConfigChanges.KeyboardHidden | ConfigChanges.UiMode)]
 public class MainActivity : AvaloniaMainActivity<App>
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)

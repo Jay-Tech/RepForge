@@ -34,11 +34,12 @@
         <Setter Property="Margin" Value="0,2" />
     </Style>
 
-    <!-- Compact tab headers (Fluent's default is oversized pivot text) -->
+    <!-- Compact tab headers (Fluent's default is oversized pivot text);
+         sized so all six fit across a phone-width bottom bar -->
     <Style Selector="TabItem">
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Padding" Value="9,6" />
         <Setter Property="MinHeight" Value="44" />
     </Style>
 

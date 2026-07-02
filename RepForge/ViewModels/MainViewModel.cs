@@ -14,6 +14,8 @@ public partial class MainViewModel : ViewModelBase
 
     public HistoryViewModel History { get; } = new();
 
+    public BodyViewModel Body { get; } = new();
+
     public SyncViewModel Sync { get; } = new();
 
     public MainViewModel()
@@ -28,6 +30,7 @@ public partial class MainViewModel : ViewModelBase
             _ = Templates.RefreshAsync();
             _ = ExerciseLibrary.RefreshAsync();
             _ = History.RefreshAsync();
+            _ = Body.RefreshAsync();
         });
     }
 }
