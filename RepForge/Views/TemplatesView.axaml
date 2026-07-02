@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             xmlns:m="using:RepForge.Models"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.TemplatesView"
+             x:DataType="vm:TemplatesViewModel">
+  <Design.DataContext>
+    <vm:TemplatesViewModel />
+  </Design.DataContext>
+
+  <Panel>
+    <!-- Template list (shown when no editor is open) -->
+    <DockPanel Margin="12"
+               IsVisible="{Binding ActiveEditor, Converter={x:Static ObjectConverters.IsNull}}">
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+        <TextBox Grid.Column="0" Margin="0,0,8,0"
+                 Text="{Binding NewTemplateName}"
+                 Watermark="New workout name">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding AddTemplateCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
+        <Button Grid.Column="1" Content="Create" Command="{Binding AddTemplateCommand}" />
+      </Grid>
+
+      <TextBlock DockPanel.Dock="Top" Margin="0,0,0,8" Opacity="0.6" FontSize="12"
+                 Text="Tap a workout to edit it" />
+
+      <ListBox ItemsSource="{Binding Templates}"
+               SelectedItem="{Binding SelectedTemplate}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="m:WorkoutTemplate">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Text="{Binding Name}"
+                         FontWeight="SemiBold" VerticalAlignment="Center" />
+              <Button Grid.Column="1" Content="✕" Background="Transparent"
+                      Command="{Binding $parent[ListBox].((vm:TemplatesViewModel)DataContext).DeleteTemplateCommand}"
+                      CommandParameter="{Binding}" />
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <!-- Editor (replaces the list when a template is open) -->
+    <ContentControl Content="{Binding ActiveEditor}"
+                    IsVisible="{Binding ActiveEditor, Converter={x:Static ObjectConverters.IsNotNull}}" />
+  </Panel>
+</UserControl>
