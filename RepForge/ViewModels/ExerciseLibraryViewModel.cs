@@ -23,6 +23,12 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
     private bool _newIsCardio;
 
     [ObservableProperty]
+    private Exercise? _selectedExercise;
+
+    [ObservableProperty]
+    private ExerciseProgressViewModel? _activeProgress;
+
+    [ObservableProperty]
     private bool _isLoading;
 
     public ExerciseLibraryViewModel()
@@ -45,6 +51,23 @@ public partial class ExerciseLibraryViewModel : ViewModelBase
         {
             IsLoading = false;
         }
+    }
+
+    /// <summary>Tapping an exercise opens its progression chart.</summary>
+    partial void OnSelectedExerciseChanged(Exercise? value)
+    {
+        if (value is null || _db is null)
+            return;
+        _ = OpenProgressAsync(value);
+        SelectedExercise = null;
+    }
+
+    private async Task OpenProgressAsync(Exercise exercise)
+    {
+        if (_db is null)
+            return;
+        ActiveProgress = await ExerciseProgressViewModel.CreateAsync(
+            _db, exercise, () => ActiveProgress = null);
     }
 
     [RelayCommand]

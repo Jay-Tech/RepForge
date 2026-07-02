@@ -70,6 +70,7 @@ public sealed class RepForgeDb
         await _conn.CreateTableAsync<TemplateExercise>();
         await _conn.CreateTableAsync<WorkoutSession>();
         await _conn.CreateTableAsync<SetEntry>();
+        await _conn.CreateTableAsync<BodyMetric>();
         await _conn.CreateTableAsync<Tombstone>();
         await _conn.CreateTableAsync<Setting>();
 
@@ -225,6 +226,12 @@ public sealed class RepForgeDb
         await AddTombstoneAsync(set.Id, "SetEntry");
     }
 
+    public Task<List<SetEntry>> GetSetsForExerciseAsync(Guid exerciseId) =>
+        _conn.Table<SetEntry>()
+            .Where(s => s.ExerciseId == exerciseId)
+            .OrderBy(s => s.LoggedUtc)
+            .ToListAsync();
+
     /// <summary>Sets for this exercise from the most recent other session — the "last time" hint.</summary>
     public async Task<List<SetEntry>> GetPreviousSetsAsync(Guid exerciseId, Guid excludeSessionId)
     {
@@ -239,6 +246,23 @@ public sealed class RepForgeDb
             .Where(s => s.SessionId == last.SessionId && s.ExerciseId == exerciseId)
             .OrderBy(s => s.SetNumber)
             .ToListAsync();
+    }
+
+    // --- Body metrics ---
+
+    public Task<List<BodyMetric>> GetBodyMetricsAsync() =>
+        _conn.Table<BodyMetric>().OrderByDescending(b => b.MeasuredUtc).ToListAsync();
+
+    public Task<int> SaveBodyMetricAsync(BodyMetric metric)
+    {
+        metric.ModifiedUtc = DateTime.UtcNow;
+        return _conn.InsertOrReplaceAsync(metric);
+    }
+
+    public async Task DeleteBodyMetricAsync(BodyMetric metric)
+    {
+        await _conn.DeleteAsync(metric);
+        await AddTombstoneAsync(metric.Id, "BodyMetric");
     }
 
     // --- Settings (local only, never synced) ---
@@ -261,6 +285,7 @@ public sealed class RepForgeDb
         TemplateExercises = await _conn.Table<TemplateExercise>().ToListAsync(),
         Sessions = await _conn.Table<WorkoutSession>().ToListAsync(),
         Sets = await _conn.Table<SetEntry>().ToListAsync(),
+        BodyMetrics = await _conn.Table<BodyMetric>().ToListAsync(),
         Tombstones = await _conn.Table<Tombstone>().ToListAsync(),
     };
 
@@ -273,12 +298,14 @@ public sealed class RepForgeDb
             tran.DeleteAll<TemplateExercise>();
             tran.DeleteAll<WorkoutSession>();
             tran.DeleteAll<SetEntry>();
+            tran.DeleteAll<BodyMetric>();
             tran.DeleteAll<Tombstone>();
             tran.InsertAll(data.Exercises);
             tran.InsertAll(data.Templates);
             tran.InsertAll(data.TemplateExercises);
             tran.InsertAll(data.Sessions);
             tran.InsertAll(data.Sets);
+            tran.InsertAll(data.BodyMetrics);
             tran.InsertAll(data.Tombstones);
         });
 
