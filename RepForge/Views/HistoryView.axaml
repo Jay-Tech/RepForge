@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:RepForge.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
+             x:Class="RepForge.Views.HistoryView"
+             x:DataType="vm:HistoryViewModel">
+  <Design.DataContext>
+    <vm:HistoryViewModel />
+  </Design.DataContext>
+
+  <Panel>
+    <DockPanel Margin="12"
+               IsVisible="{Binding ActiveDetail, Converter={x:Static ObjectConverters.IsNull}}">
+      <TextBlock DockPanel.Dock="Top" Margin="0,0,0,8" Opacity="0.6" FontSize="12"
+                 Text="Tap a workout to see what you lifted" />
+      <ListBox ItemsSource="{Binding Sessions}"
+               SelectedItem="{Binding SelectedSession}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:HistorySessionItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Grid.Column="0" Spacing="2">
+                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding DateText}" FontSize="12" Opacity="0.6" />
+                <TextBlock Text="{Binding Summary}" FontSize="12" Opacity="0.6" />
+              </StackPanel>
+              <Button Grid.Column="1" Content="✕" Background="Transparent"
+                      VerticalAlignment="Center"
+                      Command="{Binding $parent[ListBox].((vm:HistoryViewModel)DataContext).DeleteSessionCommand}"
+                      CommandParameter="{Binding}" />
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <ContentControl Content="{Binding ActiveDetail}"
+                    IsVisible="{Binding ActiveDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
+  </Panel>
+</UserControl>

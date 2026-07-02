@@ -123,6 +123,31 @@ public sealed class RepForgeDb
         await _conn.DeleteAsync(session);
     }
 
+    public Task<List<WorkoutSession>> GetCompletedSessionsAsync() =>
+        _conn.Table<WorkoutSession>()
+            .Where(s => s.CompletedUtc != null)
+            .OrderByDescending(s => s.StartedUtc)
+            .ToListAsync();
+
+    public Task<List<SetEntry>> GetAllSetsAsync() =>
+        _conn.Table<SetEntry>().ToListAsync();
+
+    /// <summary>Sets for this exercise from the most recent other session — the "last time" hint.</summary>
+    public async Task<List<SetEntry>> GetPreviousSetsAsync(int exerciseId, int excludeSessionId)
+    {
+        var last = await _conn.Table<SetEntry>()
+            .Where(s => s.ExerciseId == exerciseId && s.SessionId != excludeSessionId)
+            .OrderByDescending(s => s.LoggedUtc)
+            .FirstOrDefaultAsync();
+        if (last is null)
+            return [];
+
+        return await _conn.Table<SetEntry>()
+            .Where(s => s.SessionId == last.SessionId && s.ExerciseId == exerciseId)
+            .OrderBy(s => s.SetNumber)
+            .ToListAsync();
+    }
+
     public Task<int> SaveSessionAsync(WorkoutSession session) =>
         session.Id == 0 ? _conn.InsertAsync(session) : _conn.UpdateAsync(session);
 

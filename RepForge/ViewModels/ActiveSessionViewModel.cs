@@ -62,6 +62,16 @@ public partial class ActiveSessionViewModel : ViewModelBase
             item.AddExisting(set);
         }
 
+        foreach (var item in items)
+        {
+            var previous = await db.GetPreviousSetsAsync(item.ExerciseId, session.Id);
+            if (previous.Count > 0)
+            {
+                item.LastTime = "Last time:  " + string.Join(", ", previous.Select(s =>
+                    s.Weight > 0 ? $"{s.Weight:0.##}×{s.Reps}" : $"{s.Reps} reps"));
+            }
+        }
+
         var vm = new ActiveSessionViewModel(db, session, title, close);
         foreach (var item in items)
             vm.Exercises.Add(item);

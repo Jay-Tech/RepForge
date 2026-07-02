@@ -23,5 +23,8 @@
     <TabItem Header="Exercises">
       <views:ExerciseLibraryView DataContext="{Binding ExerciseLibrary}" />
     </TabItem>
+    <TabItem Header="History">
+      <views:HistoryView DataContext="{Binding History}" />
+    </TabItem>
   </TabControl>
 </UserControl>

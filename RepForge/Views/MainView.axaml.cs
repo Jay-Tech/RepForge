@@ -14,6 +14,9 @@ public partial class MainView : UserControl
     {
         // SelectionChanged bubbles up from ListBoxes inside the tabs; only react to the TabControl.
         if (e.Source is TabControl && DataContext is MainViewModel vm)
+        {
             _ = vm.Workout.RefreshTemplatesAsync();
+            _ = vm.History.RefreshAsync();
+        }
     }
 }

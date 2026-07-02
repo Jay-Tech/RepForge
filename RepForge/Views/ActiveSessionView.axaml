@@ -33,6 +33,8 @@
                     <TextBlock Text="{Binding ExerciseName}" FontWeight="SemiBold" />
                     <TextBlock Text="{Binding TargetSummary}" FontSize="12" Opacity="0.6"
                                IsVisible="{Binding TargetSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    <TextBlock Text="{Binding LastTime}" FontSize="12" Opacity="0.6"
+                               IsVisible="{Binding LastTime, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                   </StackPanel>
                   <TextBlock Grid.Column="1" Text="{Binding Progress}" FontSize="12"
                              Opacity="0.6" VerticalAlignment="Top" />

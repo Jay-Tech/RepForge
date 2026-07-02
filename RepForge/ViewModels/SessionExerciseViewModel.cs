@@ -32,6 +32,10 @@ public partial class SessionExerciseViewModel : ObservableObject
     [ObservableProperty]
     private string _progress = string.Empty;
 
+    /// <summary>What was lifted for this exercise last session, e.g. "Last time:  185×10, 185×9".</summary>
+    [ObservableProperty]
+    private string _lastTime = string.Empty;
+
     public SessionExerciseViewModel(
         RepForgeDb db, int sessionId, int exerciseId, string exerciseName,
         int targetSets, int targetReps, double? targetWeight)
